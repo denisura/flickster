@@ -1,3 +1,5 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
     <string name="app_name">Flickster</string>
+    <string name="format_backdrop_image_content_description">Backdrop Imagefor <xliff:g id="duedate">%1$s</xliff:g></string>
+    <string name="format_poster_image_content_description">Poster Image for <xliff:g id="duedate">%1$s</xliff:g></string>
 </resources>

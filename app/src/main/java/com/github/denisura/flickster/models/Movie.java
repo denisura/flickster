@@ -9,24 +9,30 @@ import java.util.ArrayList;
 
 public class Movie {
 
-    String posterPath;
-    String originalTitle;
-    String overview;
+    private String posterPath;
+    private String backdropPath;
+    private String originalTitle;
+    private String overview;
 
     public String getPosterPath() {
         return String.format("https://image.tmdb.org/t/p/w342/%s", posterPath);
     }
 
+    public String getBackdropPath() {
+        return String.format("https://image.tmdb.org/t/p/w500/%s", backdropPath);
+    }
+
     public String getOriginalTitle() {
-        return originalTitle;
+        return this.originalTitle;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public Movie(JSONObject jsonObject) throws JSONException {
+    private Movie(JSONObject jsonObject) throws JSONException {
         this.posterPath = jsonObject.getString("poster_path");
+        this.backdropPath = jsonObject.getString("backdrop_path");
         this.originalTitle = jsonObject.getString("original_title");
         this.overview = jsonObject.getString("overview");
     }
