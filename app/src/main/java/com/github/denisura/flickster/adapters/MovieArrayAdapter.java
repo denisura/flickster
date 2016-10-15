@@ -68,15 +68,21 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         int orientation = display.getRotation();
 
         @StringRes int contentDescriptionId;
-
+        String imgUrl;
         if (orientation == Surface.ROTATION_90
                 || orientation == Surface.ROTATION_270) {
-            Picasso.with(getContext()).load(movie.getBackdropPath()).into(viewHolder.ivImage);
+            imgUrl =movie.getBackdropPath();
             contentDescriptionId = R.string.format_backdrop_image_content_description;
         } else {
-            Picasso.with(getContext()).load(movie.getPosterPath()).into(viewHolder.ivImage);
+            imgUrl = movie.getPosterPath();
             contentDescriptionId = R.string.format_poster_image_content_description;
         }
+
+        Picasso.with(getContext())
+                .load(imgUrl)
+                .placeholder(R.drawable.ic_whatshot_black_96dp)
+                .into(viewHolder.ivImage);
+
         String contentDescription = getContext().
                 getResources().
                 getString(contentDescriptionId, movie.getOriginalTitle());
