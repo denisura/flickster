@@ -19,6 +19,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.content.Context.WINDOW_SERVICE;
 
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
@@ -30,15 +33,16 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     private final static int VIEW_TYPE_FANCY = 1;
     private final static int VIEW_TYPE_UNKNOWN = -1;
 
-    private static class ViewHolder {
-        TextView tvTitle;
-        TextView tvOverview;
-        ImageView ivImage;
+    public  static class ViewHolder {
+        @BindView(R.id.tvTitle)
+        public TextView tvTitle;
+        @BindView(R.id.tvOverview)
+        public TextView tvOverview;
+        @BindView(R.id.ivMovieImage)
+        public ImageView ivImage;
 
         ViewHolder(View view) {
-            tvOverview = (TextView) view.findViewById(R.id.tvOverview);
-            tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-            ivImage = (ImageView) view.findViewById(R.id.ivMovieImage);
+            ButterKnife.bind(this, view);
         }
     }
 
