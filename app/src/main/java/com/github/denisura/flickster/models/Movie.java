@@ -14,6 +14,11 @@ public class Movie {
     private String originalTitle;
     private String overview;
 
+
+    private double popularity;
+    private double voteAverage;
+    private int voteCount;
+
     public String getPosterPath() {
         return String.format("https://image.tmdb.org/t/p/w342/%s", posterPath);
     }
@@ -26,6 +31,18 @@ public class Movie {
         return this.originalTitle;
     }
 
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
     public String getOverview() {
         return overview;
     }
@@ -35,6 +52,9 @@ public class Movie {
         this.backdropPath = jsonObject.getString("backdrop_path");
         this.originalTitle = jsonObject.getString("original_title");
         this.overview = jsonObject.getString("overview");
+        this.popularity = jsonObject.getDouble("popularity");
+        this.voteAverage = jsonObject.getDouble("vote_average");
+        this.voteCount = jsonObject.getInt("vote_count");
     }
 
     public static ArrayList<Movie> fromJSONArray(JSONArray array) {
