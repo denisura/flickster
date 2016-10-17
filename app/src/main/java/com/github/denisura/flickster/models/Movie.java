@@ -5,9 +5,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Movie {
+public class Movie implements Serializable {
 
     private String posterPath;
     private String backdropPath;
@@ -15,8 +16,8 @@ public class Movie {
     private String overview;
 
 
-    private double popularity;
-    private double voteAverage;
+    private float popularity;
+    private float voteAverage;
     private int voteCount;
 
     public String getPosterPath() {
@@ -31,11 +32,11 @@ public class Movie {
         return this.originalTitle;
     }
 
-    public double getPopularity() {
+    public float getPopularity() {
         return popularity;
     }
 
-    public double getVoteAverage() {
+    public float getVoteAverage() {
         return voteAverage;
     }
 
@@ -52,8 +53,8 @@ public class Movie {
         this.backdropPath = jsonObject.getString("backdrop_path");
         this.originalTitle = jsonObject.getString("original_title");
         this.overview = jsonObject.getString("overview");
-        this.popularity = jsonObject.getDouble("popularity");
-        this.voteAverage = jsonObject.getDouble("vote_average");
+        this.popularity = (float) jsonObject.getDouble("popularity");
+        this.voteAverage =(float) jsonObject.getDouble("vote_average");
         this.voteCount = jsonObject.getInt("vote_count");
     }
 

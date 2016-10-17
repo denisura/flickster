@@ -1,8 +1,11 @@
 package com.github.denisura.flickster.adapters;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -14,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.denisura.flickster.R;
+import com.github.denisura.flickster.dialog.MovieDetailsFragment;
 import com.github.denisura.flickster.models.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -33,7 +37,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     private final static int VIEW_TYPE_FANCY = 1;
     private final static int VIEW_TYPE_UNKNOWN = -1;
 
-    public  static class ViewHolder {
+    public static class ViewHolder {
         @BindView(R.id.tvTitle)
         public TextView tvTitle;
         @BindView(R.id.tvOverview)
@@ -75,7 +79,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
     private void bindView(View view, Context context, int position) {
 
-        Movie movie = getItem(position);
+        final Movie movie = getItem(position);
         if (movie == null) {
             return;
         }
@@ -94,19 +98,23 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
                 int orientation = display.getRotation();
 
                 @StringRes int contentDescriptionId;
+                @DrawableRes int imagePlaceholder;
                 String imgUrl;
                 if (orientation == Surface.ROTATION_90
                         || orientation == Surface.ROTATION_270) {
                     imgUrl = movie.getBackdropPath();
                     contentDescriptionId = R.string.format_backdrop_image_content_description;
+                    imagePlaceholder = R.drawable.placeholder;
                 } else {
                     imgUrl = movie.getPosterPath();
                     contentDescriptionId = R.string.format_poster_image_content_description;
+                    imagePlaceholder = R.drawable.poster_placeholder;
                 }
 
                 Picasso.with(getContext())
                         .load(imgUrl)
-                        .placeholder(R.drawable.placeholder)
+                        .placeholder(imagePlaceholder)
+                        .error(imagePlaceholder)
                         .into(viewHolder.ivImage);
 
                 String contentDescription = getContext().
@@ -138,6 +146,15 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
                 break;
             }
         }
+
+        viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
+                MovieDetailsFragment showFragment = MovieDetailsFragment.newInstance(movie);
+                showFragment.show(fm, "dialog_movie_details");
+            }
+        });
     }
 
     @NonNull
