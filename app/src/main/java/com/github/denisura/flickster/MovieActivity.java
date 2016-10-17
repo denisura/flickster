@@ -3,6 +3,7 @@ package com.github.denisura.flickster;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
 import com.github.denisura.flickster.adapters.MovieArrayAdapter;
@@ -34,6 +35,9 @@ public class MovieActivity extends AppCompatActivity {
     @BindView(R.id.lvMovies)
     ListView lvItems;
 
+    @BindView(R.id.toolbar)
+    public Toolbar mToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class MovieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie);
 
         unbinder = ButterKnife.bind(this);
+        setSupportActionBar(mToolbar);
 
         movieAdapter = new MovieArrayAdapter(this, movies);
         lvItems.setAdapter(movieAdapter);
