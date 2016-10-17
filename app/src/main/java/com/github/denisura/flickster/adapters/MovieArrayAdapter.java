@@ -1,9 +1,13 @@
 package com.github.denisura.flickster.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Display;
@@ -13,14 +17,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.denisura.flickster.R;
 import com.github.denisura.flickster.dialog.MovieDetailsFragment;
 import com.github.denisura.flickster.models.Movie;
+import com.github.denisura.flickster.models.Video;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -38,6 +45,9 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     private final static int VIEW_TYPE_UNKNOWN = -1;
 
     public static class ViewHolder {
+
+        @BindView(R.id.ivMovie)
+        public PercentRelativeLayout ivMovie;
         @BindView(R.id.tvTitle)
         public TextView tvTitle;
         @BindView(R.id.tvOverview)
@@ -48,6 +58,129 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+
+        public void bindView(final Movie movie, final Context context) {
+            ivImage.setImageResource(0);
+            tvTitle.setText(movie.getOriginalTitle());
+
+            tvOverview.setText(movie.getOverview());
+            Display display = ((WindowManager) context.getSystemService(WINDOW_SERVICE))
+                    .getDefaultDisplay();
+
+            int orientation = display.getRotation();
+
+            @StringRes int contentDescriptionId;
+            @DrawableRes int imagePlaceholder;
+            String imgUrl;
+            if (orientation == Surface.ROTATION_90
+                    || orientation == Surface.ROTATION_270) {
+                imgUrl = movie.getBackdropPath();
+                contentDescriptionId = R.string.format_backdrop_image_content_description;
+                imagePlaceholder = R.drawable.placeholder;
+            } else {
+                imgUrl = movie.getPosterPath();
+                contentDescriptionId = R.string.format_poster_image_content_description;
+                imagePlaceholder = R.drawable.poster_placeholder;
+            }
+
+            Picasso.with(context)
+                    .load(imgUrl)
+                    .placeholder(imagePlaceholder)
+                    .error(imagePlaceholder)
+                    .into(ivImage);
+
+            String contentDescription = context.
+                    getResources().
+                    getString(contentDescriptionId, movie.getOriginalTitle());
+            ivImage.setContentDescription(contentDescription);
+            ivMovie.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
+                    MovieDetailsFragment showFragment = MovieDetailsFragment.newInstance(movie);
+                    showFragment.show(fm, "dialog_movie_details");
+                }
+            });
+        }
+    }
+
+
+    public static class FancyViewHolder {
+
+        @BindView(R.id.ivMovie)
+        public FrameLayout ivMovie;
+        @BindView(R.id.tvTitle)
+        public TextView tvTitle;
+        @BindView(R.id.ivPlay)
+        public ImageView ivPlay;
+        @BindView(R.id.ivMovieImage)
+        public ImageView ivImage;
+
+
+        private Context mContext;
+
+
+        FancyViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+
+        public void bindView(final Movie movie, final Context context) {
+
+            mContext = context;
+            ivImage.setImageResource(0);
+            tvTitle.setText(movie.getOriginalTitle());
+            String imgUrl = movie.getBackdropPath();
+            @StringRes
+            int contentDescriptionId = R.string.format_backdrop_image_content_description;
+
+            Picasso.with(context)
+                    .load(imgUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .into(ivImage);
+
+            String contentDescription = context.
+                    getResources().
+                    getString(contentDescriptionId, movie.getOriginalTitle());
+            ivImage.setContentDescription(contentDescription);
+
+            ArrayList<Video> videos = movie.getVideos();
+            if (videos != null && videos.size() > 0) {
+
+                final String source = videos.get(0).getKey();
+
+                ivPlay.setVisibility(View.VISIBLE);
+                ivPlay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + source));
+                            mContext.startActivity(intent);
+                        } catch (ActivityNotFoundException ex) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("http://www.youtube.com/watch?v=" + source));
+                            mContext.startActivity(intent);
+                        }
+
+                    }
+                });
+
+            } else {
+                ivPlay.setVisibility(View.GONE);
+                ivPlay.setOnClickListener(null);
+            }
+
+
+            ivMovie.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
+                    MovieDetailsFragment showFragment = MovieDetailsFragment.newInstance(movie);
+                    showFragment.show(fm, "dialog_movie_details");
+                }
+            });
+        }
+
     }
 
     public MovieArrayAdapter(Context context, List<Movie> movies) {
@@ -60,20 +193,23 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         // Choose the layout type
         int viewType = getItemViewType(position);
         int layoutId = -1;
+        View view;
         switch (viewType) {
             case VIEW_TYPE_SHMENCY: {
-                layoutId = R.layout.item_movie;
+                view = LayoutInflater.from(context).inflate(R.layout.item_movie, parent, false);
+                ViewHolder viewHolder = new ViewHolder(view);
+                view.setTag(viewHolder);
                 break;
             }
             case VIEW_TYPE_FANCY: {
-                layoutId = R.layout.item_movie_hr;
+                view = LayoutInflater.from(context).inflate(R.layout.item_movie_hr, parent, false);
+                FancyViewHolder viewHolder = new FancyViewHolder(view);
+                view.setTag(viewHolder);
                 break;
             }
+            default:
+                view = LayoutInflater.from(context).inflate(layoutId, parent, false);
         }
-        View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        view.setTag(viewHolder);
-
         return view;
     }
 
@@ -83,78 +219,20 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         if (movie == null) {
             return;
         }
-        ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         int viewType = getItemViewType(position);
         switch (viewType) {
             case VIEW_TYPE_SHMENCY: {
-                viewHolder.ivImage.setImageResource(0);
-                viewHolder.tvTitle.setText(movie.getOriginalTitle());
-
-                viewHolder.tvOverview.setText(movie.getOverview());
-                Display display = ((WindowManager) getContext().getSystemService(WINDOW_SERVICE))
-                        .getDefaultDisplay();
-
-                int orientation = display.getRotation();
-
-                @StringRes int contentDescriptionId;
-                @DrawableRes int imagePlaceholder;
-                String imgUrl;
-                if (orientation == Surface.ROTATION_90
-                        || orientation == Surface.ROTATION_270) {
-                    imgUrl = movie.getBackdropPath();
-                    contentDescriptionId = R.string.format_backdrop_image_content_description;
-                    imagePlaceholder = R.drawable.placeholder;
-                } else {
-                    imgUrl = movie.getPosterPath();
-                    contentDescriptionId = R.string.format_poster_image_content_description;
-                    imagePlaceholder = R.drawable.poster_placeholder;
-                }
-
-                Picasso.with(getContext())
-                        .load(imgUrl)
-                        .placeholder(imagePlaceholder)
-                        .error(imagePlaceholder)
-                        .into(viewHolder.ivImage);
-
-                String contentDescription = getContext().
-                        getResources().
-                        getString(contentDescriptionId, movie.getOriginalTitle());
-                viewHolder.ivImage.setContentDescription(contentDescription);
-
+                ViewHolder viewHolder = (ViewHolder) view.getTag();
+                viewHolder.bindView(movie, getContext());
                 break;
             }
             case VIEW_TYPE_FANCY: {
-
-                viewHolder.ivImage.setImageResource(0);
-                viewHolder.tvTitle.setText(movie.getOriginalTitle());
-                viewHolder.tvOverview.setText(movie.getOverview());
-                String imgUrl = movie.getBackdropPath();
-                @StringRes
-                int contentDescriptionId = R.string.format_backdrop_image_content_description;
-
-                Picasso.with(getContext())
-                        .load(imgUrl)
-                        .placeholder(R.drawable.placeholder)
-                        .into(viewHolder.ivImage);
-
-                String contentDescription = getContext().
-                        getResources().
-                        getString(contentDescriptionId, movie.getOriginalTitle());
-                viewHolder.ivImage.setContentDescription(contentDescription);
-
+                FancyViewHolder viewHolder = (FancyViewHolder) view.getTag();
+                viewHolder.bindView(movie, getContext());
                 break;
             }
         }
-
-        viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
-                MovieDetailsFragment showFragment = MovieDetailsFragment.newInstance(movie);
-                showFragment.show(fm, "dialog_movie_details");
-            }
-        });
     }
 
     @NonNull

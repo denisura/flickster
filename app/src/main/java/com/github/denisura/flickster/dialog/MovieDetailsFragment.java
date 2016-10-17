@@ -7,11 +7,16 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.github.denisura.flickster.R;
+import com.github.denisura.flickster.adapters.VideoArrayAdapter;
 import com.github.denisura.flickster.models.Movie;
+import com.github.denisura.flickster.models.Video;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +38,11 @@ public class MovieDetailsFragment extends DialogFragment {
     @BindView(R.id.synopsis)
     public TextView mSynopsis;
 
+    @BindView(R.id.lvVideos)
+    ListView lvItems;
+
+    ArrayList<Video> videos = new ArrayList<>();
+    VideoArrayAdapter videoAdapter;
 
     public MovieDetailsFragment() {
         // Empty constructor is required for DialogFragment
@@ -58,13 +68,25 @@ public class MovieDetailsFragment extends DialogFragment {
         unbinder = ButterKnife.bind(this, v);
         final Movie movie = (Movie) getArguments().getSerializable(ARG_ITEM);
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity())
-                .setTitle(movie.getOriginalTitle())
-                .setView(v);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 
-        mPopularity.setText(getContext().getString(R.string.popularity, movie.getPopularity()));
-        mTvRate.setRating(movie.getVoteAverage()/2);
-        mSynopsis.setText(movie.getOverview());
+        if (movie != null) {
+            videos = movie.getVideos();
+            dialogBuilder.setTitle(movie.getOriginalTitle())
+                    .setView(v);
+
+            mPopularity.setText(getContext().getString(R.string.popularity, movie.getPopularity()));
+            mTvRate.setRating(movie.getVoteAverage() / 2);
+            mSynopsis.setText(movie.getOverview());
+
+            videoAdapter = new VideoArrayAdapter(getContext(), videos);
+            lvItems.setAdapter(videoAdapter);
+            if (videos.size() > 0) {
+                lvItems.setVisibility(View.VISIBLE);
+            } else {
+                lvItems.setVisibility(View.GONE);
+            }
+        }
         return dialogBuilder.create();
     }
 

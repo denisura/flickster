@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:id="@+id/ivVideo"
+    >
+
+    <ImageView
+        android:id="@+id/ivVideoImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/format_poster_image_content_description"
+        app:layout_widthPercent="57%"
+        android:background="@color/placeholder"
+        tools:src="@drawable/placeholder" />
+
+    <ImageView
+        android:id="@+id/ivPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/play"
+        android:layout_alignLeft="@id/ivVideoImage"
+        android:layout_alignStart="@id/ivVideoImage"
+        android:layout_alignEnd="@id/ivVideoImage"
+        android:layout_alignRight="@id/ivVideoImage"
+        android:layout_alignBaseline="@id/ivVideoImage"
+        android:layout_alignBottom="@id/ivVideoImage"
+        android:layout_alignTop="@id/ivVideoImage"
+        android:padding="24dp"
+        android:src="@android:drawable/ic_media_play" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/ivVideoImage"
+        android:layout_toRightOf="@+id/ivVideoImage"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        tools:text="Teaser" />
+
+
+</android.support.percent.PercentRelativeLayout>

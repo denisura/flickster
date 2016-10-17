@@ -15,10 +15,25 @@ public class Movie implements Serializable {
     private String originalTitle;
     private String overview;
 
+    public ArrayList<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(ArrayList<Video> videos) {
+        this.videos = videos;
+    }
+
+    private ArrayList<Video> videos;
+
 
     private float popularity;
     private float voteAverage;
     private int voteCount;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
 
     public String getPosterPath() {
         return String.format("https://image.tmdb.org/t/p/w342/%s", posterPath);
@@ -56,6 +71,7 @@ public class Movie implements Serializable {
         this.popularity = (float) jsonObject.getDouble("popularity");
         this.voteAverage =(float) jsonObject.getDouble("vote_average");
         this.voteCount = jsonObject.getInt("vote_count");
+        this.id = jsonObject.getInt("id");
     }
 
     public static ArrayList<Movie> fromJSONArray(JSONArray array) {

@@ -7,6 +7,7 @@ import android.widget.ListView;
 
 import com.github.denisura.flickster.adapters.MovieArrayAdapter;
 import com.github.denisura.flickster.models.Movie;
+import com.github.denisura.flickster.models.Video;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -71,8 +72,12 @@ public class MovieActivity extends AppCompatActivity {
                 movieAdapter.clear();
                 try {
                     JSONArray movieJsonResults = response.getJSONArray("results");
+
                     movies.addAll(Movie.fromJSONArray(movieJsonResults));
                     movieAdapter.notifyDataSetChanged();
+                    for (int i = 0; i < movies.size(); i++) {
+                        fetchMovieVideo(i);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -82,6 +87,34 @@ public class MovieActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
+    }
+
+
+    private void fetchMovieVideo(final int index) {
+
+        final Movie movie = movies.get(index);
+        if (movie == null) {
+            return;
+        }
+
+        int movieId = movie.getId();
+        AsyncHttpClient client = new AsyncHttpClient();
+        String videosUrl = "https://api.themoviedb.org/3/movie/" +
+                movieId + "/videos?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
+        client.get(videosUrl, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    JSONArray jsonResults = response.getJSONArray("results");
+                    ArrayList<Video> videos = Video.fromJSONArray(jsonResults);
+                    movie.setVideos(videos);
+                    movies.set(index, movie);
+                    movieAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

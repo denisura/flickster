@@ -5,4 +5,6 @@
     <string name="rating">Rating:</string>
     <string name="popularity">Popularity: <xliff:g id="popularity">%1$f</xliff:g></string>
     <string name="synopsis">Synopsis</string>
+    <string name="play">play</string>
+    <string name="trailers">Trailers</string>
 </resources>

@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/ivMovie">
 
     <ImageView
         android:id="@+id/ivMovieImage"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
         android:contentDescription="@string/format_backdrop_image_content_description"
-        tools:src="@drawable/placeholder" />
+        tools:src="@drawable/placeholder"
+        android:layout_gravity="center"
+        />
+
+    <ImageView
+        android:id="@+id/ivPlay"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/play"
+        android:src="@android:drawable/ic_media_play"
+        android:layout_gravity="center"
+        android:layout_margin="124dp"
+        />
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/ivMovieImage"
-        android:layout_toRightOf="@+id/ivMovieImage"
+        android:gravity="center"
+        android:background="#CCCCCCCC"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:visibility="gone"
-        tools:text="The Magnificent Seven" />
+        tools:text="The Magnificent Seven"
+        android:padding="12dp"
+        android:layout_gravity="bottom"
+        />
 
     <TextView
         android:id="@+id/tvOverview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTitle"
-        android:layout_toEndOf="@+id/ivMovieImage"
-        android:layout_toRightOf="@+id/ivMovieImage"
         android:visibility="gone"
         tools:text="A big screen remake of John Sturges' classic western The Magnificent Seven, itself a remake of Akira Kurosawa's Seven Samurai. Seven gun men in the old west gradually come together to help a poor village against savage thieves." />
 
-</android.support.percent.PercentRelativeLayout>
+</FrameLayout>
