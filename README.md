@@ -2,7 +2,7 @@
 
 **Flickster** shows the latest movies currently playing in theaters. The app utilizes the Movie Database API to display images and basic information about these movies to the user.
 
-Time spent: **12** hours spent in total
+Time spent: **13** hours spent in total
 
 ## User Stories
 
@@ -34,7 +34,7 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 
-* [ ] For popular movies (i.e. a movie voted for more than 5 stars), the full backdrop image is displayed. Otherwise, a poster image, the movie title, and overview is listed.
+* [x] Background color for movie card is pulled form poster image color scheme
 
 
 ## Video Walkthrough

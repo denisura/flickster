@@ -3,6 +3,8 @@ package com.github.denisura.flickster.adapters;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -10,6 +12,8 @@ import android.support.annotation.StringRes;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.graphics.ColorUtils;
+import android.support.v7.graphics.Palette;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -26,6 +30,7 @@ import com.github.denisura.flickster.dialog.MovieDetailsFragment;
 import com.github.denisura.flickster.models.Movie;
 import com.github.denisura.flickster.models.Video;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +61,10 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         @BindView(R.id.ivMovieImage)
         public ImageView ivImage;
 
+
+        private Target target;
+        private int mMutedColor = 0xFF333333;
+
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
@@ -84,12 +93,36 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
                 imagePlaceholder = R.drawable.poster_placeholder;
             }
 
+            target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    // Bitmap is loaded, use image here
+                    if (bitmap != null) {
+                        Palette p = Palette.generate(bitmap, 12);
+                        ivImage.setImageBitmap(bitmap);
+                        mMutedColor = p.getDarkMutedColor(0xFF333333);
+                        ivMovie.setBackgroundColor(mMutedColor);
+                    }
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    ivImage.setImageDrawable(placeHolderDrawable);
+                }
+            };
+
+
             Picasso.with(context)
                     .load(imgUrl)
                     .placeholder(imagePlaceholder)
                     .error(imagePlaceholder)
                     .transform(new RoundedCornersTransformation(10, 10))
-                    .into(ivImage);
+                    .into(target);
 
             String contentDescription = context.
                     getResources().
@@ -120,6 +153,9 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
 
         private Context mContext;
+        private Target target;
+
+        private int mMutedColor = 0xFF333333;
 
 
         FancyViewHolder(View view) {
@@ -134,12 +170,35 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
             String imgUrl = movie.getBackdropPath();
             @StringRes
             int contentDescriptionId = R.string.format_backdrop_image_content_description;
+            target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    // Bitmap is loaded, use image here
+                    if (bitmap != null) {
+                        Palette p = Palette.generate(bitmap, 12);
+                        ivImage.setImageBitmap(bitmap);
+                        mMutedColor = p.getDarkMutedColor(0xFF333333);
+                        tvTitle.setBackgroundColor(ColorUtils.setAlphaComponent(mMutedColor, 0xCC));
+                        ivMovie.setBackgroundColor(mMutedColor);
+                    }
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    ivImage.setImageDrawable(placeHolderDrawable);
+                }
+            };
 
             Picasso.with(context)
                     .load(imgUrl)
                     .placeholder(R.drawable.placeholder)
                     .transform(new RoundedCornersTransformation(10, 10))
-                    .into(ivImage);
+                    .into(target);
 
             String contentDescription = context.
                     getResources().

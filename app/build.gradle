@@ -38,6 +38,7 @@ dependencies {
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
     // If you want to use the GPU Filters
     compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+    compile 'com.android.support:palette-v7:24.2.1'
     compile "com.android.support:design:24.2.1"
     compile "com.android.support:percent:24.2.1"
     testCompile 'junit:junit:4.12'
