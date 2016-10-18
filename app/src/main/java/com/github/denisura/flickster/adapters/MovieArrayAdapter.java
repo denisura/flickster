@@ -32,6 +32,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 import static android.content.Context.WINDOW_SERVICE;
 
@@ -87,6 +88,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
                     .load(imgUrl)
                     .placeholder(imagePlaceholder)
                     .error(imagePlaceholder)
+                    .transform(new RoundedCornersTransformation(10, 10))
                     .into(ivImage);
 
             String contentDescription = context.
@@ -136,6 +138,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
             Picasso.with(context)
                     .load(imgUrl)
                     .placeholder(R.drawable.placeholder)
+                    .transform(new RoundedCornersTransformation(10, 10))
                     .into(ivImage);
 
             String contentDescription = context.

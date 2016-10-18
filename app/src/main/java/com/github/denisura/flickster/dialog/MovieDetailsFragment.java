@@ -41,6 +41,9 @@ public class MovieDetailsFragment extends DialogFragment {
     @BindView(R.id.lvVideos)
     ListView lvItems;
 
+    @BindView(R.id.labelVideos)
+    public TextView mLabelVideos;
+
     ArrayList<Video> videos = new ArrayList<>();
     VideoArrayAdapter videoAdapter;
 
@@ -83,8 +86,10 @@ public class MovieDetailsFragment extends DialogFragment {
             lvItems.setAdapter(videoAdapter);
             if (videos.size() > 0) {
                 lvItems.setVisibility(View.VISIBLE);
+                mLabelVideos.setVisibility(View.VISIBLE);
             } else {
                 lvItems.setVisibility(View.GONE);
+                mLabelVideos.setVisibility(View.GONE);
             }
         }
         return dialogBuilder.create();

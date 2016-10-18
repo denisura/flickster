@@ -31,5 +31,7 @@
         android:background="#CCCCCCCC"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:text="The Magnificent Seven" />
+        tools:text="The Magnificent Seven"
+        android:layout_marginBottom="24dp"
+        />
 </FrameLayout>
