@@ -35,7 +35,7 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [x] Background color for movie card is pulled form poster image color scheme
-
+da
 
 ## Video Walkthrough
 
