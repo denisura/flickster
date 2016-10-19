@@ -39,6 +39,10 @@ da
 
 ## Video Walkthrough
 
+![Portrait Walkthrough](http://i.makeagif.com/media/10-19-2016/jm362n.gif)
+
+![Landscape Walkthrough](http://i.makeagif.com/media/10-19-2016/8EI1mU.gif)
+
 Here's a walkthrough of implemented user stories:
 
 [Portrait Video Walkthrough](https://youtu.be/pgPSNKBf_T0)
